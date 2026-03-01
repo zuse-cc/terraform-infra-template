@@ -12,18 +12,12 @@ These secrets are needed for the GitHub actions workflow to authenticate with cl
 - Get the value of `linode_token` and store it as `LINODE_TOKEN` in Github
 
 ```sh
-terraform output -raw linode_token; echo
+terraform -chdir=linode/shared/global/terraform output -raw linode_token; echo
 ```
 
 **AWS_CREDENTIALS**
 
-- Apply the workspace configuration in [./linode/shared/global/terraform](../../linode/shared/global/terraform/)
-
-```sh
-terraform -chdir=linode/shared/global/terraform apply
-```
-
-- Using the TF outputs, generate the AWS shared credentials file to use in GHA:
+- Using the TF outputs to generate the AWS shared credentials file to use in GHA:
 
 ```sh
 cat << EOF | base64

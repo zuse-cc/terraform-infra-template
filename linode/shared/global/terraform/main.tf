@@ -5,13 +5,15 @@ module "terraform_backend" {
   region  = var.region
 }
 
+locals {
+  label = "${var.env}-tf-${var.label}-rw"
+}
+
 # Linode access token and OSS credentials to access terraform state
 # These are intended to be used for deployment in GHA workflows
 resource "linode_object_storage_key" "k" {
-  label = "${var.env}-tfstate-${var.label}-${var.region}-rw"
+  label = local.label
 
-  # The repo uses multiple backends, so we cannot restrict this key
-  # FIXME: Migrate repo to use a single shared state bucket instead
   bucket_access {
     bucket_name = module.terraform_backend.bucket
     region      = var.region
@@ -20,6 +22,6 @@ resource "linode_object_storage_key" "k" {
 }
 
 resource "linode_token" "t" {
-  label  = "token"
+  label  = local.label
   scopes = "*"
 }

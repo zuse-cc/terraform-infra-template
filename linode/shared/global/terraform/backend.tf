@@ -4,7 +4,7 @@
 
 terraform {
   # backend "s3" {
-  #   bucket = ""
+  #   bucket = "<replace me>"
   #   region = "eu-central"
   #   key    = "linode/shared/global/terraform/terraform.tfstate"
 

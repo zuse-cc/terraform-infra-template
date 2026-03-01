@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name == 'main' && 'deployment' || 'read-only' }}
     env:
+      AWS_SHARED_CREDENTIALS_FILE: ${{ github.workspace }}/.aws/credentials
       LINODE_TOKEN: ${{ secrets.LINODE_TOKEN }}
     if: ${{ needs.setup.outputs.workspaces != '[]' }}
     strategy:
