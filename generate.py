@@ -140,6 +140,10 @@ def render_templates(template, out_dir, params, dry_run=False, force=False, file
                 check_format(out_file)
 
 
+def is_tf_file(file_name):
+    return file_name.endswith(".tf") or file_name.endswith(".tfvars") or file_name.endswith(".tftest.hcl")
+
+
 def safe_del(d, key):
     """Safely delete a key from a dictionary if it exists."""
     if key in d:
