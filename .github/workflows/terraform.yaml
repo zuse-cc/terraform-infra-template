@@ -26,22 +26,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Install tools
-        uses: jdx/mise-action@v2
-        with:
-          version: 2025.6.8
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tool_versions: |
-            terraform 1.11.1
       - name: Write AWS credentials file
         run: |
           mkdir -p $(dirname $AWS_SHARED_CREDENTIALS_FILE)
           echo "${{ secrets.AWS_CREDENTIALS }}" | base64 --decode > $AWS_SHARED_CREDENTIALS_FILE
           chmod 600 $AWS_SHARED_CREDENTIALS_FILE
-      - name: Terraform syntax & formatting checks
-        run: make check-fmt MODULE=${{ matrix.workspace }}
-      - name: Terraform init
-        run: terraform -chdir=${{ matrix.workspace }} init      
+      - name: Terraform setup
+        uses: zuse-cc/infra-tooling/.github/actions/terraform-setup@v0.2.0-alpha
+        with:
+          workspace: ${{ matrix.workspace }}
+          terraform_version: 1.11.1
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Terraform plan
         if: ${{ github.event_name == 'pull_request' && !github.event.pull_request.merged }}
         run: terraform -chdir=${{ matrix.workspace }} plan -lock=false # can't lock workspace in r/o environment
